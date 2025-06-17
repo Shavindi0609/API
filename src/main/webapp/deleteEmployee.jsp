@@ -1,10 +1,10 @@
-<%@ page import="com.ijse.gdse.api.dto.UserDTO" %>
 <%@ page import="com.ijse.gdse.api.model.UserModel" %>
-<%@ page import="org.apache.commons.dbcp2.BasicDataSource" %><%--
+<%@ page import="org.apache.commons.dbcp2.BasicDataSource" %>
+<%@ page import="com.ijse.gdse.api.dto.UserDTO" %><%--
   Created by IntelliJ IDEA.
   User: Shavindi
   Date: 6/17/2025
-  Time: 5:50 PM
+  Time: 5:53 PM
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
@@ -16,7 +16,7 @@
 </head>
 <body>
 <% UserDTO user = UserModel.findById(request.getParameter("id"), (BasicDataSource) request.getServletContext().getAttribute("dataSource"));%>
-<form class="row g-3" method="post" action="/update?id=<%=user.getId()%>">
+<form class="row g-3" method="post" action="/delete?id=<%=user.getId()%>">
     <div class="col-md-6">
         <label for="name" class="form-label">Name</label>
         <input type="text" class="form-control" id="name" required name="name" value="<%=user.getName()%>">
@@ -31,7 +31,7 @@
     </div>
 
     <div class="col-12">
-        <button type="submit" class="btn btn-info">Update</button>
+        <button type="submit" class="btn btn-danger">Delete</button>
     </div>
 </form>
 

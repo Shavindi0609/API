@@ -55,7 +55,8 @@
             <td><%=userDTO.getJob()%></td>
             <td><%=userDTO.getEmail()%></td>
             <td>
-                <a href=""  class="btn btn-info">Update</a>
+                <a href="updateEmployee.jsp?id=<%=userDTO.getId()%>"  class="btn btn-info">Update</a>
+                <a href="deleteEmployee.jsp?id=<%=userDTO.getId()%>"  class="btn btn-danger">Delete</a>
             </td>
         </tr>
 

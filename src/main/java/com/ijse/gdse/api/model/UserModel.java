@@ -89,4 +89,60 @@ public class UserModel {
 
         return userList;
     }
+
+    public static UserDTO findById(String id, BasicDataSource dataSource) {
+        try {
+            Connection connection = dataSource.getConnection();
+            PreparedStatement preparedStatement = connection.prepareStatement("select * from users where id = ?");
+            preparedStatement.setInt(1,Integer.parseInt(id));
+            ResultSet resultSet = preparedStatement.executeQuery();
+            if (resultSet.next()) {
+                return new UserDTO(resultSet.getInt(1),resultSet.getString(2),resultSet.getString(3),resultSet.getString(4),resultSet.getString(5));
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return null;
+    }
+
+    public static boolean deleteUser(UserDTO userDTO, BasicDataSource ds) {
+        try {
+            Connection connection =  ds.getConnection();
+            PreparedStatement preparedStatement = connection.prepareStatement("DELETE FROM users WHERE name = ? AND password = ? AND role = ? AND email = ?");
+            preparedStatement.setString(1,userDTO.getName());
+            preparedStatement.setString(2,userDTO.getPassword());
+            preparedStatement.setString(3,"employee");
+            preparedStatement.setString(4,userDTO.getEmail());
+            int i =  preparedStatement.executeUpdate();
+
+            if (i > 0) {
+                return true;
+            }
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return false;
+    }
+
+    public static boolean updateUser(UserDTO userDTO, String id, BasicDataSource ds) {
+        try {
+            Connection connection =  ds.getConnection();
+            PreparedStatement preparedStatement = connection.prepareStatement("UPDATE users SET name = ?, password = ? , role = ? , email = ? WHERE id = ?");
+            preparedStatement.setString(1,userDTO.getName());
+            preparedStatement.setString(2,userDTO.getPassword());
+            preparedStatement.setString(3,"employee");
+            preparedStatement.setString(4,userDTO.getEmail());
+            preparedStatement.setInt(5, Integer.parseInt(id));
+            int i =  preparedStatement.executeUpdate();
+
+            if (i > 0) {
+                return true;
+            }
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return false;
+    }
 }

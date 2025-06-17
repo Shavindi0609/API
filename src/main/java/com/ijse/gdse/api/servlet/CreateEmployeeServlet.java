@@ -20,7 +20,7 @@ public class CreateEmployeeServlet extends HttpServlet {
        String email = req.getParameter("email");
        String password = req.getParameter("password");
 
-     BasicDataSource ds = (BasicDataSource) req.getServletContext().getAttribute("dataSource");
+      BasicDataSource ds = (BasicDataSource) req.getServletContext().getAttribute("dataSource");
       boolean isSave =  UserModel.saveUser(new UserDTO(name,password,email),ds);
 
       if (isSave){
