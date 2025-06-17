@@ -7,9 +7,11 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class UserModel {
-    public static boolean findUser(UserDTO userDTO, String role, BasicDataSource ds) {
+    public static UserDTO findUser(UserDTO userDTO, String role, BasicDataSource ds) {
         try {
             Connection connection =  ds.getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement("select * from users where name = ? and password = ? and role = ?");
@@ -19,13 +21,13 @@ public class UserModel {
             ResultSet resultSet =  preparedStatement.executeQuery();
 
             if (resultSet.next()) {
-                return true;
+               return new UserDTO(resultSet.getInt("id"), resultSet.getString("name"),resultSet.getString("password"),resultSet.getString("role"),resultSet.getString("email"));
             }
 
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-        return false;
+            return null;
     }
 
 
@@ -47,5 +49,44 @@ public class UserModel {
             throw new RuntimeException(e);
         }
         return false;
+    }
+
+    public static UserDTO findUserId(UserDTO userDTO, String role, BasicDataSource dataSource) {
+        try {
+            Connection connection =  dataSource.getConnection();
+            PreparedStatement preparedStatement = connection.prepareStatement("select * from users where name = ? and password = ? and role = ?");
+            preparedStatement.setString(1,userDTO.getName());
+            preparedStatement.setString(2,userDTO.getPassword());
+            preparedStatement.setString(3,role);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            return new UserDTO(resultSet.getInt("id"),resultSet.getString("name"),resultSet.getString("password"),resultSet.getString("role"),resultSet.getString("email"));
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static List<UserDTO> getAll(BasicDataSource ds) {
+        List<UserDTO> userList = new ArrayList<>();
+        String sql = "SELECT * FROM users";
+
+        try (Connection con = ds.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+
+            while (rs.next()) {
+                UserDTO user = new UserDTO();
+                user.setId(rs.getInt("id"));
+                user.setName(rs.getString("name"));
+                user.setPassword(rs.getString("password"));
+                user.setJob(rs.getString("role")); // or setRole()
+                user.setEmail(rs.getString("email"));
+                userList.add(user);
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return userList;
     }
 }

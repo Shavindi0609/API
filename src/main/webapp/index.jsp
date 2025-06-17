@@ -1,3 +1,6 @@
+<%@ page import="com.ijse.gdse.api.model.UserModel" %>
+<%@ page import="com.ijse.gdse.api.dto.UserDTO" %>
+<%@ page import="org.apache.commons.dbcp2.BasicDataSource" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
@@ -21,6 +24,7 @@
 </div>
 <% } %>
 
+<%--<% UserDTO user = UserModel.findUserId(new UserDTO(request.getParameter("name"), request.getParameter("password")), request.getParameter("role"), (BasicDataSource) request.getServletContext().getAttribute("dataSource"));%>--%>
 <form class="row g-3" method="post" action="logins">
   <div class="mb-3">
     <label for="name" class="form-label">User Name</label>

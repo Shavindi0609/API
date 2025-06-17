@@ -27,9 +27,9 @@ public class LoginServlet extends HttpServlet {
         BasicDataSource ds = (BasicDataSource) req.getServletContext().getAttribute("dataSource");
 
         // පරිශීලකයා සොයනවා
-        boolean isUserValid = UserModel.findUser(new UserDTO(name, password), role, ds);
+        UserDTO isUserValid = UserModel.findUser(new UserDTO(name, password), role, ds);
 
-        if (!isUserValid) {
+        if (isUserValid == null) {
             // වැරදි login එකක් නම් error එකක් redirect කරයි
             resp.sendRedirect(req.getContextPath() + "/index.jsp?error=invalid");
         } else {
@@ -41,9 +41,9 @@ public class LoginServlet extends HttpServlet {
 
             // භූමිකාව අනුව redirect
             if ("employee".equals(role)) {
-                resp.sendRedirect(req.getContextPath() + "/employee.jsp");
+                resp.sendRedirect(req.getContextPath() + "/employee.jsp?id=" + isUserValid.getId());
             } else if ("admin".equals(role)) {
-                resp.sendRedirect(req.getContextPath() + "/admin.jsp");
+                resp.sendRedirect(req.getContextPath() + "/admin.jsp?id=" + isUserValid.getId());
             } else {
                 resp.sendRedirect(req.getContextPath() + "/index.jsp?error=invalid-role");
             }
