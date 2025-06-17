@@ -18,27 +18,27 @@ public class SignUpServlet extends HttpServlet {
         String name = req.getParameter("name");
         String password = req.getParameter("password");
         String email = req.getParameter("email");
+        String role = req.getParameter("role"); // ✅ Get role
 
-        // null check සහ හිස් String පරික්ෂාව
-        if (name == null || password == null || email == null ||
-                name.isBlank() || password.isBlank() || email.isBlank()) {
+        // Validate input
+        if (name == null || password == null || email == null || role == null ||
+                name.isBlank() || password.isBlank() || email.isBlank() || role.isBlank()) {
             resp.sendRedirect(req.getContextPath() + "/signup.jsp?error=missing");
             return;
         }
 
-        // password encryption (BCrypt භාවිතය - යෝජනාදායකයි)
+        // Encrypt password (Optional & Recommended)
         // String hashedPassword = BCrypt.hashpw(password, BCrypt.gensalt());
 
         BasicDataSource ds = (BasicDataSource) req.getServletContext().getAttribute("dataSource");
 
-        // saveUser method එකට userDTO object එක යොමු කිරීම
-        boolean issave = UserModel.saveUser(new UserDTO(name, password, email), ds);
+        // Send role to UserDTO
+        UserDTO userDTO = new UserDTO(name, password, email, role);  // ✅ Include role
+        boolean issave = UserModel.saveUser(userDTO, ds);             // ✅ Updated call
 
         if (issave) {
-            // register වීම සාර්ථක නම් login.jsp වෙත යොමු කිරීම
             resp.sendRedirect(req.getContextPath() + "/index.jsp?signup=success");
         } else {
-            // save විය නොහැකි නම් error redirect
             resp.sendRedirect(req.getContextPath() + "/signup.jsp?error=exists");
         }
     }

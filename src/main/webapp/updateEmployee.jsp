@@ -29,7 +29,14 @@
         <label for="password" class="form-label">Password</label>
         <input type="password" class="form-control" id="password" placeholder="****" required name="password" value="<%=user.getPassword()%>">
     </div>
-
+    <div class="col-12">
+        <label for="role" class="form-label">Role</label>
+        <select class="form-select" id="role" name="role" required>
+            <option disabled value="">Select Role</option>
+            <option value="employee" <%= "employee".equalsIgnoreCase(user.getRole()) ? "selected" : "" %>>Employee</option>
+            <option value="admin" <%= "admin".equalsIgnoreCase(user.getRole()) ? "selected" : "" %>>Admin</option>
+        </select>
+    </div>
     <div class="col-12">
         <button type="submit" class="btn btn-info">Update</button>
     </div>

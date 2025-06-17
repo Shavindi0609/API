@@ -14,20 +14,21 @@ import java.io.IOException;
 
 @WebServlet("/delete")
 public class DeleteServlet extends HttpServlet {
-
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-
-        String name =  req.getParameter("name");
-        String email = req.getParameter("email");
-        String password = req.getParameter("password");
         String id = req.getParameter("id");
 
         BasicDataSource ds = (BasicDataSource) req.getServletContext().getAttribute("dataSource");
-        boolean isDelete =  UserModel.deleteUser(new UserDTO(name,password,email),ds);
 
-        if (isDelete){
-            resp.sendRedirect(req.getContextPath()+"/employee.jsp?id="+id);
+        UserDTO userDTO = new UserDTO();
+        userDTO.setId(Integer.parseInt(id)); // Send only ID
+
+        boolean isDelete = UserModel.deleteUser(userDTO, ds);
+
+        if (isDelete) {
+            resp.sendRedirect(req.getContextPath() + "/employee.jsp?deleted=true");
+        } else {
+            resp.sendRedirect(req.getContextPath() + "/employee.jsp?deleted=false");
         }
     }
 }

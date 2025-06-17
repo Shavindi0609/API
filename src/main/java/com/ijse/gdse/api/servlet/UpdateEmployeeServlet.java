@@ -15,16 +15,24 @@ import java.io.IOException;
 public class UpdateEmployeeServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        String name =  req.getParameter("name");
+        String name = req.getParameter("name");
         String email = req.getParameter("email");
         String password = req.getParameter("password");
-       String id = req.getParameter("id");
+        String role = req.getParameter("role");  // important!
+
+        String id = req.getParameter("id");
 
         BasicDataSource ds = (BasicDataSource) req.getServletContext().getAttribute("dataSource");
-        boolean isDelete =  UserModel.updateUser(new UserDTO(name,password,email),id, ds);
+        UserDTO user = new UserDTO(name, password, email, role);
 
-        if (isDelete){
-            resp.sendRedirect(req.getContextPath()+"/employee.jsp?id="+id);
+        boolean isUpdate = UserModel.updateUser(user, id, ds);
+
+        if (isUpdate) {
+            resp.sendRedirect(req.getContextPath() + "/employee.jsp?id=" + id);
+        } else {
+            resp.getWriter().write("Update failed!");
         }
     }
+
+
 }
