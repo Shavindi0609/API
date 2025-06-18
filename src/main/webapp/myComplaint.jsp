@@ -3,9 +3,25 @@
 <%@ page import="java.util.List" %>
 <%@ page import="com.ijse.gdse.api.model.ComplaintModel" %>
 <%@ page import="java.time.format.DateTimeFormatter" %>
+
+<%
+    // 🛡️ Check for logged-in user
+    Integer userId = (Integer) session.getAttribute("userId");
+    if (userId == null) {
+        response.sendRedirect("login.jsp");
+        return;
+    }
+
+    // 🔌 Get DataSource from application context
+    BasicDataSource ds = (BasicDataSource) application.getAttribute("dataSource");
+
+    // ✅ Correct method call to fetch complaints for logged-in employee
+    List<ComplaintDTO> complaints = ComplaintModel.getAllByEmployeeId(ds, userId);
+%>
+
 <html>
 <head>
-    <title>Complaint List</title>
+    <title>My Complaint List</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
         body {
@@ -79,7 +95,7 @@
 
 <!-- 🔸 Main Content -->
 <div class="content">
-    <h2> My Complaint List</h2>
+    <h2>My Complaint List</h2>
 
     <table class="table table-bordered">
         <thead>
@@ -91,15 +107,10 @@
             <th>Priority</th>
             <th>Status</th>
             <th>Create Date</th>
-            <th>Action</th>
         </tr>
         </thead>
         <tbody>
-        <%
-            BasicDataSource ds = (BasicDataSource) request.getServletContext().getAttribute("dataSource");
-            List<ComplaintDTO> complaints = ComplaintModel.getAll(ds);
-            for (ComplaintDTO complaint : complaints) {
-        %>
+        <% for (ComplaintDTO complaint : complaints) { %>
         <tr>
             <td><%= complaint.getId() %></td>
             <td><%= complaint.getTitle() %></td>
@@ -108,10 +119,6 @@
             <td><%= complaint.getPriority() %></td>
             <td><%= complaint.getStatus() %></td>
             <td><%= complaint.getCreatedDate().format(DateTimeFormatter.ofPattern("dd-MM-yyyy")) %></td>
-            <td>
-                <a href="updateComplaint.jsp?id=<%= complaint.getId() %>" class="btn btn-info btn-sm">Update</a>
-                <a href="deleteComplaint.jsp?id=<%= complaint.getId() %>" class="btn btn-danger btn-sm">Delete</a>
-            </td>
         </tr>
         <% } %>
         </tbody>

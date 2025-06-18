@@ -18,7 +18,7 @@
   BasicDataSource ds = (BasicDataSource) application.getAttribute("dataSource");
   ComplaintDTO complaint = null;
 
-  List<ComplaintDTO> all = ComplaintModel.getAll(ds);
+  List<ComplaintDTO> all = ComplaintModel.getAllComplaints(ds);
   for (ComplaintDTO dto : all) {
     if (dto.getId() == id) {
       complaint = dto;

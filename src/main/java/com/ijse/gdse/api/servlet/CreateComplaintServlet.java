@@ -22,20 +22,25 @@ public class CreateComplaintServlet extends HttpServlet {
         String department = req.getParameter("department");
         String priority = req.getParameter("priority");
         String status = req.getParameter("status");
-        LocalDate createdDate = LocalDate.now(); // Or use a hidden form field if needed
+        LocalDate createdDate = LocalDate.now();
 
-        // Get the DataSource
+        // Get logged-in userId from session
+        Integer employeeId = (Integer) req.getSession().getAttribute("userId");
+        if (employeeId == null) {
+            resp.sendRedirect("index.jsp");
+            return;
+        }
+
         BasicDataSource ds = (BasicDataSource) req.getServletContext().getAttribute("dataSource");
 
-        // Create ComplaintDTO object
-        ComplaintDTO complaint = new ComplaintDTO(title, description, department, priority, status, createdDate);
+        // Create complaint DTO with employeeId
+        ComplaintDTO complaint = new ComplaintDTO(title, description, department, priority, status, createdDate, employeeId);
 
-        // Save using model
         boolean isSaved = ComplaintModel.saveComplaint(complaint, ds);
 
         if (isSaved) {
             req.getSession().setAttribute("complaintSuccess", "Complaint submitted successfully!");
-            resp.sendRedirect("myComplaints.jsp");
+            resp.sendRedirect("myComplaint.jsp");
         } else {
             resp.sendRedirect("newComplaint.jsp?error=true");
         }

@@ -35,13 +35,13 @@ public class UpdateComplaintServlet extends HttpServlet {
 
             if (isUpdated) {
                 req.getSession().setAttribute("complaintUpdated", "Complaint updated successfully!");
-                resp.sendRedirect("myComplaint.jsp");
+                resp.sendRedirect("allComplaints.jsp");
             } else {
                 resp.sendRedirect("updateComplaint.jsp?id=" + id + "&error=true");
             }
         } catch (Exception e) {
             e.printStackTrace();
-            resp.sendRedirect("myComplaint.jsp?error=exception");
+            resp.sendRedirect("allComplaints.jsp?error=exception");
         }
     }
 }
