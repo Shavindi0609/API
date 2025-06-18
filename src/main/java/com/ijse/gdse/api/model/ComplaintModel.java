@@ -6,11 +6,39 @@ import org.apache.commons.dbcp2.BasicDataSource;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
 public class ComplaintModel {
+
+    // ComplaintModel.java
+    public static List<ComplaintDTO> getAllComplaints(BasicDataSource ds) {
+        List<ComplaintDTO> list = new ArrayList<>();
+        String query = "SELECT * FROM complaints";
+
+        try (Connection con = ds.getConnection();
+             PreparedStatement ps = con.prepareStatement(query)) {
+
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                ComplaintDTO complaint = new ComplaintDTO(
+                        rs.getInt("id"),
+                        rs.getString("title"),
+                        rs.getString("description"),
+                        rs.getString("department"),
+                        rs.getString("priority"),
+                        rs.getString("status"),
+                        rs.getDate("create_date").toLocalDate()
+                );
+                list.add(complaint);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
 
     // Get all complaints
     public static List<ComplaintDTO> getAll(BasicDataSource ds) {
@@ -72,4 +100,6 @@ public class ComplaintModel {
             return false;
         }
     }
+
+
 }
