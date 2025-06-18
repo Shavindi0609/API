@@ -26,7 +26,14 @@
         <label for="password" class="form-label">Password</label>
         <input type="password" class="form-control" id="password" placeholder="****" required name="password">
     </div>
-
+    <div class="col-md-6">
+        <label for="role" class="form-label">Role</label>
+        <select id="role" name="role" class="form-select" required>
+            <option selected disabled value="">Choose...</option>
+            <option value="Admin">Admin</option>
+            <option value="Employee">Employee</option>
+        </select>
+    </div>
     <div class="col-12">
         <button type="submit" class="btn btn-primary">Submit</button>
     </div>
