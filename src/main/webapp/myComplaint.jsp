@@ -2,20 +2,16 @@
 <%@ page import="com.ijse.gdse.api.dto.ComplaintDTO" %>
 <%@ page import="java.util.List" %>
 <%@ page import="com.ijse.gdse.api.model.ComplaintModel" %>
-<%@ page import="java.time.format.DateTimeFormatter" %><%--
-  Created by IntelliJ IDEA.
-  User: Shavindi
-  Date: 6/18/2025
-  Time: 11:27 AM
-  To change this template use File | Settings | File Templates.
---%>
+<%@ page import="java.time.format.DateTimeFormatter" %>
 <html>
 <head>
-    <title>Complaints</title>
+    <title>Complaint List</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
         body {
             overflow-x: hidden;
+            background: white;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
         .sidebar {
             width: 220px;
@@ -23,21 +19,50 @@
             position: fixed;
             top: 0;
             left: 0;
-            background-color: #343a40;
+            background: #4e3a99;
             padding-top: 60px;
         }
+        .sidebar h5 {
+            text-align: center;
+            color: white;
+            margin-bottom: 20px;
+        }
         .sidebar a {
-            color: #fff;
+            color: #ddd;
             padding: 15px;
             display: block;
             text-decoration: none;
+            font-weight: 600;
         }
         .sidebar a:hover {
-            background-color: #495057;
+            background-color: #6a5acd;
+            color: white;
         }
         .content {
             margin-left: 220px;
             padding: 20px;
+        }
+        h2 {
+            color: #4e3a99;
+            margin-bottom: 20px;
+        }
+        .table {
+            background-color: #fff;
+            color: #333;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        thead {
+            background: linear-gradient(135deg, #4a90e2, #8e44ad);
+            color: white;
+        }
+        tbody tr:hover {
+            background-color: #e0e0e0;
+            color: black;
+        }
+        .btn {
+            font-weight: 600;
         }
     </style>
 </head>
@@ -45,21 +70,19 @@
 
 <!-- 🔹 Sidebar -->
 <div class="sidebar">
-    <h5 class="text-white text-center">Dashboard</h5>
-    <a href="#">Home</a>
-    <a href="createEmployee.jsp">New Employee</a>
+    <h5>Employee Portal</h5>
+    <a href="employee.jsp">Dashboard</a>
     <a href="newComplaint.jsp">New Complaint</a>
-    <a href="employee.jsp">Employee List</a>
     <a href="myComplaint.jsp">Complaint List</a>
+    <a href="logout.jsp" style="color: darkred; font-weight: bold;">Logout</a>
 </div>
 
 <!-- 🔸 Main Content -->
 <div class="content">
-
-    <h2>Complaint List</h2>
+    <h2> My Complaint List</h2>
 
     <table class="table table-bordered">
-        <thead class="table-dark">
+        <thead>
         <tr>
             <th>#</th>
             <th>Title</th>
@@ -74,7 +97,7 @@
         <tbody>
         <%
             BasicDataSource ds = (BasicDataSource) request.getServletContext().getAttribute("dataSource");
-            List<ComplaintDTO> complaints = ComplaintModel.getAll(ds); // ⬅️ ComplaintModel.getAll method එක implement කරන්න
+            List<ComplaintDTO> complaints = ComplaintModel.getAll(ds);
             for (ComplaintDTO complaint : complaints) {
         %>
         <tr>
@@ -93,7 +116,6 @@
         <% } %>
         </tbody>
     </table>
-
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.bundle.min.js"></script>

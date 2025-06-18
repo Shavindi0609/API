@@ -35,7 +35,7 @@ public class CreateComplaintServlet extends HttpServlet {
 
         if (isSaved) {
             req.getSession().setAttribute("complaintSuccess", "Complaint submitted successfully!");
-            resp.sendRedirect("myComplaint.jsp");
+            resp.sendRedirect("myComplaints.jsp");
         } else {
             resp.sendRedirect("newComplaint.jsp?error=true");
         }

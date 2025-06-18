@@ -96,9 +96,9 @@
     <a href="#">Dashboard</a>
     <a href="newComplaint.jsp">New Complaint</a>
     <a href="myComplaint.jsp">My Complaints</a>
-    <a href="employee.jsp">Employee List</a>
-    <a href="createEmployee.jsp">Create Employee</a>
-    <a href="logout.jsp" style="color: #f00; font-weight: bold;">Logout</a>
+<%--    <a href="employee.jsp">Employee List</a>--%>
+<%--    <a href="createEmployee.jsp">Create Employee</a>--%>
+    <a href="logout.jsp" style="color: darkred; font-weight: bold;">Logout</a>
 </div>
 
 <!-- Main Content -->

@@ -53,4 +53,23 @@ public class ComplaintModel {
             return false;
         }
     }
+
+    public static boolean updateComplaint(ComplaintDTO dto, BasicDataSource ds) {
+        try (Connection con = ds.getConnection()) {
+            String sql = "UPDATE complaints SET title = ?, description = ?, department = ?, priority = ?, status = ?, create_date = ? WHERE id = ?";
+            PreparedStatement stm = con.prepareStatement(sql);
+            stm.setString(1, dto.getTitle());
+            stm.setString(2, dto.getDescription());
+            stm.setString(3, dto.getDepartment());
+            stm.setString(4, dto.getPriority());
+            stm.setString(5, dto.getStatus());
+            stm.setDate(6, java.sql.Date.valueOf(dto.getCreatedDate()));
+            stm.setInt(7, dto.getId());
+
+            return stm.executeUpdate() > 0;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
 }
