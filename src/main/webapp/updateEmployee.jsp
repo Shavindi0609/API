@@ -7,7 +7,7 @@
     UserDTO user = UserModel.findById(request.getParameter("id"),
             (BasicDataSource) request.getServletContext().getAttribute("dataSource"));
     if (user == null) {
-        response.sendRedirect("employee.jsp");
+        response.sendRedirect("employeeList.jsp");
         return;
     }
 %>
@@ -94,7 +94,7 @@
             </select>
         </div>
         <div class="d-flex justify-content-between">
-            <a href="admin.jsp" class="btn btn-secondary btn-back px-5 mt-3">Back</a>
+            <a href="employeeList.jsp" class="btn btn-secondary btn-back px-5 mt-3">Back</a>
             <button type="submit" class="btn btn-info px-5 mt-3">Update</button>
         </div>
     </form>

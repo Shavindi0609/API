@@ -7,7 +7,7 @@
     UserDTO user = UserModel.findById(request.getParameter("id"),
             (BasicDataSource) request.getServletContext().getAttribute("dataSource"));
     if (user == null) {
-        response.sendRedirect("employee.jsp");
+        response.sendRedirect("employeeList.jsp");
         return;
     }
 %>
@@ -86,7 +86,7 @@
             <input type="password" readonly class="form-control" id="password" name="password" value="<%=user.getPassword()%>">
         </div>
         <div class="d-flex justify-content-between">
-            <a href="employee.jsp" class="btn btn-secondary btn-back px-5 mt-3">Back</a>
+            <a href="employeeList.jsp" class="btn btn-secondary btn-back px-5 mt-3">Back</a>
             <button type="submit" class="btn btn-danger px-5 mt-3">Delete</button>
         </div>
     </form>
