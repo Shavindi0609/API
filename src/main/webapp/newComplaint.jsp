@@ -81,7 +81,7 @@
                 <option value="Pending">Pending</option>
                 <option value="In Progress">In Progress</option>
                 <option value="Resolved">Resolved</option>
-                <option value="Closed">Closed</option>
+                <option value="Closed">Rejected</option>
             </select>
         </div>
 

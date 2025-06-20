@@ -133,6 +133,7 @@
         <option value="Pending" <%= complaint.getStatus().equals("Pending") ? "selected" : "" %>>Pending</option>
         <option value="In Progress" <%= complaint.getStatus().equals("In Progress") ? "selected" : "" %>>In Progress</option>
         <option value="Resolved" <%= complaint.getStatus().equals("Resolved") ? "selected" : "" %>>Resolved</option>
+        <option value="Rejected" <%= complaint.getStatus().equals("Rejected") ? "selected" : "" %>>Rejected</option>
       </select>
     </div>
 

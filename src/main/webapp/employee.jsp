@@ -2,7 +2,17 @@
 <%@ page import="org.apache.commons.dbcp2.BasicDataSource" %>
 <%@ page import="com.ijse.gdse.api.dto.UserDTO" %>
 <%@ page import="java.util.List" %>
+<%@ page import="com.ijse.gdse.api.model.ComplaintModel" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+
+<%
+    BasicDataSource ds = (BasicDataSource) request.getServletContext().getAttribute("dataSource");
+
+    int pendingCount = ComplaintModel.countByStatus(ds, "Pending");
+    int inProgressCount = ComplaintModel.countByStatus(ds, "In Progress");
+    int resolvedCount = ComplaintModel.countByStatus(ds, "Resolved");
+    int rejectedCount = ComplaintModel.countByStatus(ds, "Rejected");
+%>
 
 <html>
 <head>
@@ -11,9 +21,8 @@
     <style>
         body {
             overflow-x: hidden;
-            /*background: #6a5acd; !* purple background *!*/
-            background: white;
-            color: white;
+            background: #f8f9fa;
+            color: #212529;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
         .sidebar {
@@ -29,13 +38,15 @@
             text-align: center;
             padding: 15px 0;
             border-bottom: 1px solid #a0a0a0;
+            color: #ddd;
         }
         .sidebar a {
             color: #ddd;
-            padding: 15px;
+            padding: 15px 20px;
             display: block;
             text-decoration: none;
             font-weight: 600;
+            transition: background-color 0.3s ease;
         }
         .sidebar a:hover {
             background-color: #6a5acd;
@@ -43,45 +54,58 @@
         }
         .content {
             margin-left: 220px;
-            padding: 20px;
+            padding: 30px 40px;
+        }
+        h2 {
+            color: #4e3a99;
+            margin-bottom: 20px;
         }
         .dashboard-overview {
             display: flex;
-            justify-content: space-between;
-            margin-bottom: 30px;
+            gap: 20px;
+            margin-bottom: 40px;
         }
         .overview-box {
             flex: 1;
-            margin: 0 10px;
-            /* background: #7b68ee; */
             background: linear-gradient(135deg, #4a90e2, #8e44ad);
-            padding: 20px;
-            border-radius: 10px;
+            padding: 25px 15px;
+            border-radius: 12px;
             text-align: center;
-            box-shadow: 0 0 15px rgba(255,255,255,0.2);
+            color: white;
+            box-shadow: 0 8px 20px rgba(138, 43, 226, 0.3);
+            transition: transform 0.3s ease;
+            cursor: default;
+        }
+        .overview-box:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 30px rgba(138, 43, 226, 0.5);
         }
         .overview-box h3 {
-            font-size: 36px;
-            margin: 0;
+            font-size: 40px;
+            margin-bottom: 10px;
+            font-weight: 700;
         }
         .overview-box p {
-            margin: 5px 0 0 0;
-            font-size: 14px;
-            letter-spacing: 1px;
+            font-size: 16px;
+            letter-spacing: 1.2px;
+            text-transform: uppercase;
+            margin: 0;
         }
         table {
             background-color: #fff;
             color: #333;
-            border-radius: 8px;
+            border-radius: 10px;
             overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            width: 100%;
         }
         thead {
             background-color: #4e3a99;
             color: white;
         }
         tbody tr:hover {
-            background-color: #e0e0e0;
-            color: black;
+            background-color: #f1f1f1;
+            color: #212529;
         }
         .btn {
             font-weight: 600;
@@ -96,37 +120,41 @@
     <a href="#">Dashboard</a>
     <a href="newComplaint.jsp">New Complaint</a>
     <a href="myComplaint.jsp">My Complaints</a>
-<%--    <a href="employee.jsp">Employee List</a>--%>
-<%--    <a href="createEmployee.jsp">Create Employee</a>--%>
+    <%-- <a href="employee.jsp">Employee List</a> --%>
+    <%-- <a href="createEmployee.jsp">Create Employee</a> --%>
     <a href="logout.jsp" style="color: darkred; font-weight: bold;">Logout</a>
 </div>
 
 <!-- Main Content -->
 <div class="content">
-    <h2>Dashboard Overview</h2>
 
+    <h2>Welcome, Employee!</h2>
+    <p>Use the sidebar to navigate through the employee features.</p>
+    <hr />
+
+
+    <h2>Dashboard Overview</h2>
     <div class="dashboard-overview">
         <div class="overview-box">
-            <h3>0</h3>
+            <h3><%= pendingCount %></h3>
             <p>Pending</p>
         </div>
         <div class="overview-box">
-            <h3>0</h3>
+            <h3><%= inProgressCount %></h3>
             <p>In Progress</p>
         </div>
         <div class="overview-box">
-            <h3>0</h3>
+            <h3><%= resolvedCount %></h3>
             <p>Resolved</p>
         </div>
         <div class="overview-box">
-            <h3>0</h3>
+            <h3><%= rejectedCount %></h3>
             <p>Rejected</p>
         </div>
     </div>
 
-<%--    <h2>Employee List</h2>--%>
 
-<%--    <table class="table table-bordered">--%>
+<%--    <table class="table table-bordered table-hover">--%>
 <%--        <thead>--%>
 <%--        <tr>--%>
 <%--            <th>#</th>--%>

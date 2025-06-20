@@ -131,7 +131,21 @@ public class ComplaintModel {
             e.printStackTrace();
             return false;
         }
+
     }
+
+    public static int countByStatus(BasicDataSource ds, String status) throws SQLException {
+        try (Connection con = ds.getConnection();
+             PreparedStatement ps = con.prepareStatement("SELECT COUNT(*) FROM complaints WHERE status = ?")) {
+            ps.setString(1, status);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+            return 0;
+        }
+    }
+
 
 //    public static List<ComplaintDTO> getAll(BasicDataSource dataSource) {
 //        List<ComplaintDTO> complaintList = new ArrayList<>();

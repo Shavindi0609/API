@@ -1,8 +1,18 @@
 <%@ page import="com.ijse.gdse.api.model.UserModel" %>
 <%@ page import="org.apache.commons.dbcp2.BasicDataSource" %>
 <%@ page import="com.ijse.gdse.api.dto.UserDTO" %>
+<%@ page import="com.ijse.gdse.api.model.ComplaintModel" %>
 <%@ page import="java.util.List" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+
+<%
+    BasicDataSource ds = (BasicDataSource) request.getServletContext().getAttribute("dataSource");
+
+    int pendingCount = ComplaintModel.countByStatus(ds, "Pending");
+    int inProgressCount = ComplaintModel.countByStatus(ds, "In Progress");
+    int resolvedCount = ComplaintModel.countByStatus(ds, "Resolved");
+    int rejectedCount = ComplaintModel.countByStatus(ds, "Rejected");
+%>
 
 <html>
 <head>
@@ -15,7 +25,6 @@
             color: #333;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
-        /* Sidebar styling - purple like employee sidebar */
         .sidebar {
             width: 220px;
             height: 100vh;
@@ -52,31 +61,53 @@
             display: flex;
             justify-content: space-between;
             margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+        .dashboard-overview {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 40px;
         }
         .overview-box {
             flex: 1;
-            margin: 0 10px;
             background: linear-gradient(135deg, #4a90e2, #8e44ad);
-            padding: 20px;
-            border-radius: 10px;
+            padding: 25px 15px;
+            border-radius: 12px;
             text-align: center;
-            box-shadow: 0 0 15px rgba(255,255,255,0.2);
             color: white;
+            box-shadow: 0 8px 20px rgba(138, 43, 226, 0.3);
+            transition: transform 0.3s ease;
+            cursor: default;
+        }
+        .overview-box:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 30px rgba(138, 43, 226, 0.5);
         }
         .overview-box h3 {
-            font-size: 36px;
-            margin: 0;
+            font-size: 40px;
+            margin-bottom: 10px;
+            font-weight: 700;
         }
         .overview-box p {
-            margin: 5px 0 0 0;
-            font-size: 14px;
-            letter-spacing: 1px;
+            font-size: 16px;
+            letter-spacing: 1.2px;
+            text-transform: uppercase;
+            margin: 0;
         }
-        h2, p {
-            color: #333;
+        .chart-section {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
         }
-        .btn {
-            font-weight: 600;
+        .chart-card {
+            flex: 1;
+            min-width: 300px;
+            max-width: 600px;
+        }
+        .desc-card {
+            flex: 1;
+            min-width: 250px;
+            max-width: 600px;
         }
     </style>
 </head>
@@ -94,70 +125,78 @@
 
 <!-- Main Content -->
 <div class="content">
-    <h2>Welcome, Admin!</h2>
-    <p>Use the sidebar to navigate through the admin features.</p>
-    <hr />
-
     <h2>Dashboard Overview</h2>
     <div class="dashboard-overview">
         <div class="overview-box">
-            <h3>0</h3>
+            <h3><%= pendingCount %></h3>
             <p>Pending</p>
         </div>
         <div class="overview-box">
-            <h3>0</h3>
+            <h3><%= inProgressCount %></h3>
             <p>In Progress</p>
         </div>
         <div class="overview-box">
-            <h3>0</h3>
+            <h3><%= resolvedCount %></h3>
             <p>Resolved</p>
         </div>
         <div class="overview-box">
-            <h3>0</h3>
+            <h3><%= rejectedCount %></h3>
             <p>Rejected</p>
         </div>
     </div>
 
-    <%-- Example Employee Table (commented out, enable if you want to list employees) --%>
-    <%--
-    <h2>Employee List</h2>
-    <table class="table table-bordered">
-        <thead>
-            <tr>
-                <th>#</th>
-                <th>Name</th>
-                <th>Password</th>
-                <th>Role</th>
-                <th>Email</th>
-                <th>Options</th>
-            </tr>
-        </thead>
-        <tbody>
-        <%
-            BasicDataSource ds = (BasicDataSource) request.getServletContext().getAttribute("dataSource");
-            List<UserDTO> users = UserModel.getAll(ds);
-            for (UserDTO userDTO : users) {
-        %>
-            <tr>
-                <td><%= userDTO.getId() %></td>
-                <td><%= userDTO.getName() %></td>
-                <td><%= userDTO.getPassword() %></td>
-                <td><%= userDTO.getRole() %></td>
-                <td><%= userDTO.getEmail() %></td>
-                <td>
-                    <a href="updateEmployee.jsp?id=<%= userDTO.getId() %>" class="btn btn-info btn-sm">Update</a>
-                    <a href="deleteEmployee.jsp?id=<%= userDTO.getId() %>" class="btn btn-danger btn-sm">Delete</a>
-                </td>
-            </tr>
-        <%
-            }
-        %>
-        </tbody>
-    </table>
-    --%>
+    <!-- Chart Section -->
+    <div class="chart-section mt-4">
+        <div class="card chart-card">
+            <div class="card-body">
+                <h5 class="card-title">Complaint Status Summary</h5>
+                <canvas id="complaintPieChart" width="400" height="400"></canvas>
+            </div>
+        </div>
 
+        <div class="card desc-card">
+            <div class="card-body">
+                <h5 class="card-title">Chart Description</h5>
+                <p class="text-muted">
+                    This pie chart visualizes the distribution of complaint statuses, helping administrators quickly identify how many complaints are pending, in progress, resolved, or rejected.
+                </p>
+            </div>
+        </div>
+    </div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    const ctx = document.getElementById('complaintPieChart').getContext('2d');
+    const complaintPieChart = new Chart(ctx, {
+        type: 'pie',
+        data: {
+            labels: ['Pending', 'In Progress', 'Resolved', 'Rejected'],
+            datasets: [{
+                label: 'Complaint Status',
+                data: [<%= pendingCount %>, <%= inProgressCount %>, <%= resolvedCount %>, <%= rejectedCount %>],
+                backgroundColor: [
+                    '#f39c12', // Pending - Orange
+                    '#3498db', // In Progress - Blue
+                    '#2ecc71', // Resolved - Green
+                    '#e74c3c'  // Rejected - Red
+                ],
+                borderColor: '#fff',
+                borderWidth: 2
+            }]
+        },
+        options: {
+            responsive: false,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    position: 'bottom'
+                }
+            }
+        }
+    });
+</script>
+
 </body>
 </html>
