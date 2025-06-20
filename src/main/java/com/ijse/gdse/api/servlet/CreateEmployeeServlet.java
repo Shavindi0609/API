@@ -25,7 +25,7 @@ public class CreateEmployeeServlet extends HttpServlet {
         boolean isSave = UserModel.saveUser(new UserDTO(name, password, email, role), ds); // ✅ Pass role
 
         if (isSave) {
-            resp.sendRedirect(req.getContextPath() + "/admin.jsp");
+            resp.sendRedirect(req.getContextPath() + "/employeeList.jsp");
         } else {
             resp.sendRedirect(req.getContextPath() + "/createEmployee.jsp?error=true");
         }

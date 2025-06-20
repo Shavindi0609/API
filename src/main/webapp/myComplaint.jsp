@@ -119,6 +119,11 @@
             <td><%= complaint.getPriority() %></td>
             <td><%= complaint.getStatus() %></td>
             <td><%= complaint.getCreatedDate().format(DateTimeFormatter.ofPattern("dd-MM-yyyy")) %></td>
+            <td>
+                <a href="updateComplaint.jsp?id=<%= complaint.getId() %>" class="btn btn-info btn-sm">Update</a>
+                <a href="deleteComplaint?id=<%= complaint.getId() %>" class="btn btn-danger btn-sm"
+                   onclick="return confirm('Are you sure you want to delete this complaint?');">Delete</a>
+            </td>
         </tr>
         <% } %>
         </tbody>

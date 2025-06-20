@@ -28,7 +28,7 @@ public class UpdateEmployeeServlet extends HttpServlet {
         boolean isUpdate = UserModel.updateUser(user, id, ds);
 
         if (isUpdate) {
-            resp.sendRedirect(req.getContextPath() + "/employee.jsp?id=" + id);
+            resp.sendRedirect(req.getContextPath() + "/employeeList.jsp?id=" + id);
         } else {
             resp.getWriter().write("Update failed!");
         }

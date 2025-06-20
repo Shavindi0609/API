@@ -26,9 +26,9 @@ public class DeleteServlet extends HttpServlet {
         boolean isDelete = UserModel.deleteUser(userDTO, ds);
 
         if (isDelete) {
-            resp.sendRedirect(req.getContextPath() + "/employee.jsp?deleted=true");
+            resp.sendRedirect(req.getContextPath() + "/employeeList.jsp?deleted=true");
         } else {
-            resp.sendRedirect(req.getContextPath() + "/employee.jsp?deleted=false");
+            resp.sendRedirect(req.getContextPath() + "/employeeList.jsp?deleted=false");
         }
     }
 }
