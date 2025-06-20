@@ -121,7 +121,7 @@ source /src/main/resources/db/schema.sql;
   - Access via:
   http://localhost:8080/cms/
 
-##🧪 Test Users
+## 🧪 Test Users
 INSERT INTO users (username, email, password, role) VALUES
 ('Ann', 'admin@example.com', 'admin123', 'Admin'),
 ('Smith', 'employee@example.com', 'emp123', 'Employee');
